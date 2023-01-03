@@ -1,0 +1,30 @@
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  password: String
+  email: String!
+}
+
+input CreateUserInput {
+  firstName: String
+  lastName: String
+  password: String
+  email: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  firstName: String
+  lastName: String
+  password: String
+  email: String!
+}
+
+type Query {
+  user(id: ID!): User
+}
+
+type Mutation {
+  register(input: CreateUserInput): User
+}
