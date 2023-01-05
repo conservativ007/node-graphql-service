@@ -1,5 +1,5 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateGenreInput } from 'src/graphql';
+import { CreateGenreInput, UpdateGenreInput } from 'src/graphql';
 import { GenreService } from '../services/genre.service';
 
 @Resolver('Genre')
@@ -24,6 +24,14 @@ export class GenresResolver {
     @Context('jwt') jwt: string,
   ) {
     return await this.genreService.create(jwt, createGenreInput);
+  }
+
+  @Mutation()
+  async updateGenre(
+    @Args('input') updateGenreInput: UpdateGenreInput,
+    @Context('jwt') jwt: string,
+  ) {
+    return await this.genreService.update(jwt, updateGenreInput);
   }
 
   @Mutation()

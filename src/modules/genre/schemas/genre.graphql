@@ -21,10 +21,6 @@ input UpdateGenreInput {
   year: Int
 }
 
-input DeleteGenreInput {
-  id: ID!
-}
-
 type Query {
   genre(id: ID!): Genre
   genres(limit: Int, offset: Int): [Genre]

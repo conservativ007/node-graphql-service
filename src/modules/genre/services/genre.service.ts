@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { CreateGenreInput, Genre } from 'src/graphql';
+import { CreateGenreInput, Genre, UpdateGenreInput } from 'src/graphql';
 
 @Injectable()
 export class GenreService {
@@ -39,11 +39,33 @@ export class GenreService {
   }
 
   async create(jwt: string, genre: CreateGenreInput): Promise<Genre> {
+    // 1. после вызова метода (post, put, delete)
+    // первым арнументом передаётся строка которая
+    // приплюсовывается к основному baseURL который мы задаём в начале
+    // 2. затем идут данные которые вы передаёте
+    // 3. после этого передаём конфиг
     const { data } = await this.client.post('', genre, {
       headers: {
         authorization: `Bearer ${jwt}`,
       },
     });
+    return this.mapResponse(data);
+  }
+
+  async update(jwt: string, genre: UpdateGenreInput): Promise<Genre> {
+    const { data } = await this.client.put(
+      genre.id,
+      {
+        ...genre,
+        // id: undefined,
+      },
+      {
+        headers: {
+          authorization: `Bearer ${jwt}`,
+        },
+      },
+    );
+
     return this.mapResponse(data);
   }
 
