@@ -1,14 +1,35 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateArtistInput, UpdateArtistInput } from 'src/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import {
+  Artist,
+  Band,
+  CreateArtistInput,
+  UpdateArtistInput,
+} from 'src/graphql';
+import { BandsService } from 'src/modules/bands/services/bands.service';
 import { ArtistsService } from '../services/artists.service';
 
 @Resolver('Artist')
 export class ArtistsResolver {
-  constructor(private artistService: ArtistsService) {}
+  constructor(
+    private artistService: ArtistsService,
+    private bandsService: BandsService,
+  ) {}
 
   // query
   @Query()
   async artist(@Args('id') id: string) {
+    const test = await this.artistService.findOneById(id);
+
+    // const bandIds = artist.bandsIds;
+    console.log(test);
     return this.artistService.findOneById(id);
   }
 
@@ -23,7 +44,6 @@ export class ArtistsResolver {
     @Args('input') input: CreateArtistInput,
     @Context('jwt') jwt: string,
   ) {
-    // console.log(input);
     return await this.artistService.create(jwt, input);
   }
 
@@ -39,4 +59,12 @@ export class ArtistsResolver {
   async deleteArtist(@Args('id') id: string, @Context('jwt') jwt: string) {
     return this.artistService.delete(jwt, id);
   }
+
+  // this will be implementation function to inject band into Artist
+  // function(){...}
+
+  // @ResolveField(() => Band)
+  // band(@Parent() artist: Artist) {
+  //   // return this.artistService.getBand(artist.)
+  // }
 }
